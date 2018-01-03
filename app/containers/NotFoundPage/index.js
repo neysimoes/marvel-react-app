@@ -1,11 +1,12 @@
-import React from 'react';
+import { Component } from 'react';
+import { connect } from 'react-redux';
 
-export default class NotFound extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class NotFoundPage extends Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <h1>
-        Página não encontrada
-      </h1>
+      <h1>Página não encontrada</h1>
     );
   }
 }
+
+export default connect( state => ({ }) )(NotFoundPage);
