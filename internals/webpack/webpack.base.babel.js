@@ -4,6 +4,10 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const lost = require('lost');
+const pxtorem = require('postcss-pxtorem');
+const mqpacker = require('css-mqpacker');
+const cssnano = require('cssnano');
 
 // Remove this line once the following warning goes away (it was meant for webpack loader authors not users):
 // 'DeprecationWarning: loaderUtils.parseQuery() received a non-string value which can be problematic,
@@ -28,12 +32,26 @@ module.exports = (options) => ({
         },
       },
       {
-        // Preprocess our own .css files
-        // This is the place to add your own loaders (e.g. sass/less etc.)
-        // for a list of loaders, see https://webpack.js.org/loaders/#styling
-        test: /\.css$/,
-        exclude: /node_modules/,
-        use: ['style-loader', 'css-loader'],
+        test: /\.(scss)$/,
+        use: [{
+          loader: 'style-loader', // inject CSS to page
+        }, {
+          loader: 'css-loader', // translates CSS into CommonJS modules
+        }, {
+          loader: 'postcss-loader', // Run post css actions
+          options: {
+            plugins() { // post css plugins, can be exported to postcss.config.js
+              return [
+                lost,
+                pxtorem,
+                mqpacker,
+                cssnano,
+              ]
+            },
+          },
+        }, {
+          loader: 'sass-loader' // compiles Sass to CSS
+        }]
       },
       {
         // Preprocess 3rd party .css files located in node_modules
